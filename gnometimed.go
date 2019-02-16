@@ -8,7 +8,7 @@ import (
 
 var DefaultEventLoopDelay = 5 * time.Second
 
-type GnomeTimedWallpaper struct {
+type Wallpaper struct {
 	// The name of this timed wallpaper
 	Name string
 
@@ -22,19 +22,19 @@ type GnomeTimedWallpaper struct {
 	LoopWait time.Duration
 }
 
-func NewGnomeTimedWallpaper(name string, path string, config *GBackground) *GnomeTimedWallpaper {
-	return &GnomeTimedWallpaper{name, path, config, DefaultEventLoopDelay}
+func NewWallpaper(name string, path string, config *GBackground) *Wallpaper {
+	return &Wallpaper{name, path, config, DefaultEventLoopDelay}
 }
 
 // StartTime returns the timed wallpaper start time, as a time.Time
-func (gw *GnomeTimedWallpaper) StartTime() time.Time {
+func (gw *Wallpaper) StartTime() time.Time {
 	// gw.Config.StartTime is a struct that contains ints,
 	// where the values are directly from the parsed XML.
 	st := gw.Config.StartTime
 	return time.Date(st.Year, time.Month(st.Month), st.Day, st.Hour, st.Minute, 0, 0, time.Local)
 }
 
-func (gw *GnomeTimedWallpaper) Images() []string {
+func (gw *Wallpaper) Images() []string {
 	var filenames []string
 	for _, static := range gw.Config.Statics {
 		filenames = append(filenames, static.Filename)
@@ -47,7 +47,7 @@ func (gw *GnomeTimedWallpaper) Images() []string {
 }
 
 // String builds a string with various information about this GNOME timed wallpaper
-func (gw *GnomeTimedWallpaper) String() string {
+func (gw *Wallpaper) String() string {
 	var sb strings.Builder
 	sb.WriteString("path\t\t\t= ")
 	sb.WriteString(gw.Path)
