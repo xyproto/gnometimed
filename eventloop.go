@@ -9,11 +9,10 @@ import (
 
 	"github.com/xyproto/crossfade"
 	"github.com/xyproto/event"
-	"github.com/xyproto/monitor"
 )
 
 // EventLoop will start the event loop for this GNOME Timed Wallpaper
-func (gw *Wallpaper) EventLoop(verbose bool) error {
+func (gw *Wallpaper) EventLoop(verbose bool, setWallpaperFunc func(string, bool) error) error {
 
 	if verbose {
 		fmt.Println("Using the GNOME Timed Wallpaper format")
@@ -24,7 +23,7 @@ func (gw *Wallpaper) EventLoop(verbose bool) error {
 	if err != nil {
 		return err
 	}
-	stw.SetInitialWallpaper(verbose)
+	stw.SetInitialWallpaper(verbose, setWallpaperFunc)
 
 	// Start the event loop
 	eventloop := event.NewLoop()
@@ -87,7 +86,7 @@ func (gw *Wallpaper) EventLoop(verbose bool) error {
 				if verbose {
 					fmt.Printf("Setting %s.\n", imageFilename)
 				}
-				if err := monitor.SetWallpaperVerbose(imageFilename, verbose); err != nil {
+				if err := setWallpaperFunc(imageFilename, verbose); err != nil {
 					fmt.Fprintf(os.Stderr, "Could not set wallpaper: %v\n", err)
 					return // return from anon func
 				}
@@ -170,7 +169,7 @@ func (gw *Wallpaper) EventLoop(verbose bool) error {
 				if verbose {
 					fmt.Printf("Setting %s.\n", tempImageFilename)
 				}
-				if err := monitor.SetWallpaperVerbose(tempImageFilename, verbose); err != nil {
+				if err := setWallpaperFunc(tempImageFilename, verbose); err != nil {
 					fmt.Fprintf(os.Stderr, "Could not set wallpaper: %v\n", err)
 					return // return from anon func
 				}
