@@ -104,7 +104,7 @@ func (gtw *Wallpaper) EventLoop(verbose bool, setWallpaperFunc func(string) erro
 			steps := 10
 
 			from := eventTime
-			window := t.Duration()
+			window := mod24(t.Duration())
 			cooldown := window / time.Duration(steps)
 			upTo := eventTime.Add(window)
 			tType := t.Type
