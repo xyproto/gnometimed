@@ -4,5 +4,5 @@ github.com/xyproto/crossfade
 github.com/xyproto/event
 # github.com/xyproto/imagelib v0.0.0-20190209194312-bbbf5649f300
 github.com/xyproto/imagelib
-# github.com/xyproto/simpletimed v1.0.8
+# github.com/xyproto/simpletimed v1.0.9-0.20190610121941-ea0cd56eea21
 github.com/xyproto/simpletimed
