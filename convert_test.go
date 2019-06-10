@@ -2,9 +2,10 @@ package gnometimed
 
 import (
 	"fmt"
+	"testing"
 )
 
-func ExampleConvert() {
+func TestConvert(t *testing.T) {
 	gtw, err := ParseXML("testdata/generated.xml")
 	if err != nil {
 		panic(err)
@@ -15,7 +16,4 @@ func ExampleConvert() {
 		panic(err)
 	}
 	fmt.Println(stw)
-
-	// Output:
-	// 2018
 }
