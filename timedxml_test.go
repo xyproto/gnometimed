@@ -24,9 +24,16 @@ func ExampleParseXML() {
 	}
 	fmt.Println(gtw.Config.StartTime.Year)
 
+	gtw, err = ParseXML("testdata/generated.xml")
+	if err != nil {
+		panic(err)
+	}
+	fmt.Println(gtw.Config.StartTime.Year)
+
 	// Output:
 	// 2009
 	// /usr/share/backgrounds/cosmos/comet.jpg
 	// 0
 	// 2011
+	// 2018
 }
