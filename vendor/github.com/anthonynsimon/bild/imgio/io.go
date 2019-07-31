@@ -7,12 +7,18 @@ import (
 	"image/png"
 	"io"
 	"os"
-
-	"golang.org/x/image/bmp"
+	"path/filepath"
+	"strings"
 )
 
-// Encoder encodes the provided image and writes it
-type Encoder func(io.Writer, image.Image) error
+// Format is used to identify the image encoding type
+type Format int
+
+// Supported image encoding types
+const (
+	JPEG = iota
+	PNG
+)
 
 // Open loads and decodes an image from a file and returns it.
 //
@@ -36,40 +42,48 @@ func Open(filename string) (image.Image, error) {
 	return img, nil
 }
 
-// JPEGEncoder returns an encoder to JPEG given the argument 'quality'
-func JPEGEncoder(quality int) Encoder {
-	return func(w io.Writer, img image.Image) error {
-		return jpeg.Encode(w, img, &jpeg.Options{Quality: quality})
+// Encode writes an image in the specified format.
+//
+// Usage example:
+//		// Encode an image to a writer in PNG format,
+//		// returns an error if something went wrong
+//		err := Encode(outFile, img, bild.PNG)
+//
+func Encode(w io.Writer, img image.Image, format Format) error {
+	var err error
+
+	switch format {
+	case PNG:
+		err = png.Encode(w, img)
+	case JPEG:
+		err = jpeg.Encode(w, img, &jpeg.Options{Quality: 95})
 	}
+
+	return err
 }
 
-// PNGEncoder returns an encoder to PNG
-func PNGEncoder() Encoder {
-	return func(w io.Writer, img image.Image) error {
-		return png.Encode(w, img)
-	}
-}
-
-// BMPEncoder returns an encoder to BMP
-func BMPEncoder() Encoder {
-	return func(w io.Writer, img image.Image) error {
-		return bmp.Encode(w, img)
-	}
-}
-
-// Save creates a file and writes to it an image using the provided encoder.
+// Save creates a file and writes to it an image in the specified format
 //
 // Usage example:
 //		// Save an image to a file in PNG format,
 //		// returns an error if something went wrong
-//		err := Save("exampleName", img, imgio.JPEGEncoder(100))
+//		err := Save("exampleName", img, bild.PNG)
 //
-func Save(filename string, img image.Image, encoder Encoder) error {
-	// filename = strings.TrimSuffix(filename, filepath.Ext(filename))
+func Save(filename string, img image.Image, format Format) error {
+	filename = strings.TrimSuffix(filename, filepath.Ext(filename))
+
+	switch format {
+	case PNG:
+		filename += ".png"
+	case JPEG:
+		filename += ".jpg"
+	}
+
 	f, err := os.Create(filename)
 	if err != nil {
 		return err
 	}
 	defer f.Close()
-	return encoder(f, img)
+
+	return Encode(f, img, format)
 }
