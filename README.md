@@ -1,5 +1,3 @@
-# gnometimed
+# Gnome Timed Wallpaper package for Go
 
-Package for dealing with GNOME Timed Wallpaper XML files
-
-Version: 2.0.1
+Moved to https://github.com/xyproto/wallutils/pkg/gnometimed.
